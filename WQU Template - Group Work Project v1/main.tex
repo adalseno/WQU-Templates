@@ -17,21 +17,49 @@
 }
 
 % Classes and packages
+% Classes and packages
+\usepackage{titling}
 \usepackage{indentfirst}
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{comment}
+\usepackage[american]{babel}
 \usepackage{lastpage}
-\usepackage{minted}
-\usepackage{csquotes}
-
+\usepackage{trimspaces}
+\usepackage{lipsum}% for fake text
 % Define custom gray colour (used in minted background)
-\usepackage[dvipsnames]{xcolor}
+\usepackage[dvipsnames, table]{xcolor}
 \definecolor{Lgray}{gray}{0.9}
+\definecolor{DarkBlue}{rgb}{0.07,0.17,0.5}
+
+
+% Minted package to render code snippets
+\usepackage{minted}
 
 % Minted package to render code snippets
 \usemintedstyle{borland}
+
+\usepackage{csquotes}
+\usepackage{import}
+\usepackage{xifthen}
+\usepackage{adjustbox}
+
+
+\usepackage{multicol}
+\setlength{\columnsep}{0.7cm}
+
+\renewcommand{\thesection}{}% Remove section references...
+\renewcommand{\thesubsection}{\arabic{subsection}}%... from subsections
+% Used to manage authors
+\newcommand{\ifcont}[3]{\ifnum#1=1 #2 \else #3\fi}
+
+% Ornamental divider (optional)
+\newcommand*\onramentaldivider{%
+    \medskip
+    \begin{center}
+    -::- \ \ - = o = - \ \ -::- \ \ - = o = - \ \ -::- \ \ - = o = - \ \ -::- 
+    \end{center}}
 
 % Bibliography style
 \usepackage[
@@ -56,60 +84,150 @@
 % ===========================================================
 % Document title, author, heading, etc
 % Please replace *Course Title* and *No.* with relevant course and number
-\title{
-    \includegraphics[width=7cm]{wqu_logo.png} \\ 
-    \vspace{0.3cm} \Large *Course Title* \\
-    \vspace{0.3cm}  Group Work Project 
-}
-\author{
-    \large Timezone Group *No.*   \ :: \ Submission *No.*
-    % comment/uncomment next line for 'Draft' note to appear
-    \textcolor{red}{ \  -= Draft =- }
-}
-\date{\today}
+% ===========================================================
+% Customize variables
+
+% Insert the required information 
+\def\gwpmodule{MScFE 0000 Moudle Name} %Module Number and Name
+\def\gwptitle{Work Title} % work title
+\def\gwpgroup{Group 99} % group number
+
+% Titles for individual submissions
+\def\submissiononetitle{Title Submission One}
+\def\submissiontwotitle{Title Submission Two}
+\def\submissionthreetitle{Title Submission Three}
+
+% Define authors
+\def\authone{Author 1}
+\def\authtwo{Author 2}
+\def\auththree{Author 3}
+
+% Define country
+\def\countryone{Country 1}
+\def\countrytwo{Country 2}
+\def\countrythree{Country 3}
+
+% Define email
+\def\emailone{email1@example.com}
+\def\emailtwo{email2@example.com}
+\def\emailthree{email3@example.com}
+
+% Define non contributing members
+\newcounter{contone} % Do not modify this
+\newcounter{conttwo} % Do not modify this
+\newcounter{contthree} % Do not modify this
+
+\setcounter{contone}{1} % set to 0 for non contributing member -> \setcounter{contone}{0}
+\setcounter{conttwo}{1}
+\setcounter{contthree}{1}
+
+
+% Max number of words
+\def\numwords{1,000} % Change if needed
+% ===========================================================
 
 
 % Header and footer
-% Please replace *Course Title* and *No.* with relevant course and module number
+
+% Define header and footer style
+
+\setlength{\droptitle}{-4em}     % Eliminate the default vertical space
+\addtolength{\droptitle}{-4pt}
+% No need to modify this. The information are taken from above
+\title{\includegraphics[width=10cm]{wqu_logo.png}\\[0.5cm]\MakeUppercase{\qquad\qquad\gwpmodule{}:\newline\gwptitle{}}}
+% No need to modify this. The information are taken from above
+\author{Authors: \authone{} \ifcont{\theconttwo}{ \& \authtwo{}}{} \ifcont{\thecontthree}{ \& \auththree{}}{}}
+\makeatletter
+\let\runauthor\@author
+\makeatother
+
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\lhead{ 
-    \textsc{WorldQuant University}  \\ 
-    *Course Title* 
-}
+\lhead{\includegraphics[width=5cm]{wqu_logo.png}}
 \rhead{
-    Group Work Project \\ 
-    Timezone Group *No.* :: Submission *No.*
+    \gwptitle{}\\
+    \gwpgroup{}\\
+    {\StrBehind{\runauthor}{ }[\last]\last}%
 }
 \cfoot{\footnotesize Page \thepage \hspace{1pt} of \pageref{LastPage}}
 \renewcommand{\headrulewidth}{1pt}
 
+% Define box 
+\usepackage[most]{tcolorbox}
 
+% Create box for cover white background, min height 2cm, max 5cm. Modify this if needed
+\newtcolorbox{wqubox}[1][colback=white]{%
+    sharp corners, height from=2cm to 5cm, #1
+}
+
+% Command to print word count
+\newcommand\wordcount{\input{wqu-words.sum}}
+\newcommand\wordcounts{\input{wqu-heads.sum}}
+\newcommand\wordcountt{\input{wqu-text.sum}}
+
+% Keywords command from https://it.overleaf.com/latex/templates/abstract-keywords-and-references/xsfshwnhyynd
+\providecommand{\keywords}[1]
+{
+  \small	
+  \textbf{\textit{Keywords: }} #1
+}
 % ===========================================================
 % Beginning of Document
 \begin{document}
-\maketitle
+\begin{titlingpage}
 
-% List of group members
-\textbf{Group members:} 
-*Student 1 name and email*,
-*Student 2 name and email*,
-*Student 3 name and email*.
-
+\vspace*{10px}
 \begin{center}
-\footnotesize
-\begin{tabular}{|l|l|l|} \hline
-    Submission 1 contributors & Submission 2 contributors & Submission 3 contributors  \\ \hline
-    *Student 1 name and email*  &   &   \\
-    *Student 1 name and email*  &   &   \\
-    *Student 1 name and email*  &   &   \\  \hline
-\end{tabular}
+\includegraphics[width=10cm]{wqu_logo.png}
 \end{center}
+\bigskip
+\begin{center}
+\begin{adjustbox}{width=\textwidth}
+\begin{tabular}{ |c|c|c|c|}
+ \hline
+\rowcolor{DarkBlue}
+ \textcolor{white}{\textbf{Full Legal Name}} & \textcolor{white}{\textbf{Location (Country)}} & \textcolor{white}{\textbf{Email address}} &%
+ \shortstack{\textcolor{white}{\textbf{Non-Contributing}} \\ \textcolor{white}{\textbf{Member (X)}}}\\ 
+ \hline
+ \authone{} & \countryone{} & \emailone{} &\ifcont{\thecontone}{}{X}\\
+ \authtwo{} & \countrytwo{} & \emailtwo{} &\ifcont{\theconttwo}{}{X}\\  
+ \auththree{} & \countrythree{} & \emailthree{} &\ifcont{\thecontthree}{}{X}\\  
+ \hline
+\end{tabular}
+\end{adjustbox}
+\end{center}
+\vspace{50pt}
+\begin{adjustbox}{width=\textwidth}
+\begin{tabular}{ |l|l|}
+ \hline
+\rowcolor{DarkBlue}
+ \multicolumn{2}{l|}{\shortstack[l]{\\[5pt]\textcolor{white}{\textbf{Statement of integrity}: By typing the names of all group members in the text}\\ \textcolor{white}{box below, you confirm that the assignment submitted is original work produced by}\\ \textcolor{white}{the group (excluding any non-contributing members identified with an “X” above).}}}\\[5pt]
+ \hline
+ \cellcolor{gray!20}Team member 1 & \ifcont{\thecontone}{\authone{}}{}\\
+ \cellcolor{gray!20}Team member 2 & \ifcont{\theconttwo}{\authtwo{}}{} \\  
+ \cellcolor{gray!20}Team member 3 & \ifcont{\thecontthree}{\auththree{}}{} \\ 
+ \hline
+\end{tabular}
+\end{adjustbox}
 
-\vspace*{0.5cm}
+\vspace{50pt}
 
-This group work project is an essential assignment required in the *Course Title* course of the Worldquant University Master's degree program in Financial Engineering and consists of a three-part submission reports.
+\begin{adjustbox}{width=\textwidth}
+\begin{tabular}{ |l|}
+ \hline
+\rowcolor{DarkBlue}
+{\shortstack[l]{\\[5pt]\textcolor{white}{Use the box below to explain any attempts to reach out to a non-contributing member.}\\ \textcolor{white}{Type (N/A) if all members contributed.}\\ \textcolor{white}{\textbf{Note:} you may be required to provide proof of your outreach to non-contributing}\\ \textcolor{white}{members upon request.}}}\\[5pt]
+ \hline
+ N/A (just two members in the group)\\[50 pt]% write your text here if needed
+ \hline
+\end{tabular}
+\end{adjustbox}
+
+% ===========================================================
+
+\end{titlingpage}
+\newpage
 
 % Table of Contents
 \tableofcontents
